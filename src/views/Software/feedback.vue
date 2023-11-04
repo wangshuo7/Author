@@ -19,9 +19,9 @@
                       : item.youxizuozhe_username
                   }}
                 </div>
-                <div class="more">
+                <!-- <div class="more">
                   <el-icon><MoreFilled /></el-icon>
-                </div>
+                </div> -->
               </div>
               <div class="second">
                 {{ item.content }}
@@ -86,9 +86,9 @@
                     }}
                   </span>
                 </div>
-                <div class="more">
+                <!-- <div class="more">
                   <el-icon><MoreFilled /></el-icon>
-                </div>
+                </div> -->
               </div>
               <div class="second">
                 {{ child.content }}
@@ -122,6 +122,7 @@
               </div>
             </div>
           </div>
+          <el-divider />
         </div>
       </template>
     </HModel>
@@ -131,7 +132,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import HModel from '../../components/HModel/index.vue'
-import { MoreFilled, ChatRound, CaretRight } from '@element-plus/icons-vue'
+import { ChatRound, CaretRight } from '@element-plus/icons-vue'
 import { getFeedbackList, submitFeedback } from '../../api/software'
 import router from '../../router'
 import Moment from 'moment'
