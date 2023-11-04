@@ -40,3 +40,12 @@ export const addGameVersion = (data: any) => {
 export const editGameNotice = (data: any) => {
   return request.post('/youxizuozhe/game/gonggao', data)
 }
+
+// 反馈列表
+export const getFeedbackList = (data: any) => {
+  return request.post('/youxizuozhe/feedback/index', data)
+}
+// 提交反馈
+export const submitFeedback = (data: any) => {
+  return request.post('/youxizuozhe/feedback/add', data)
+}

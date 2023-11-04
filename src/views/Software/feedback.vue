@@ -1,13 +1,277 @@
 <template>
-  <HModel>
-    <template #head> </template>
-    <template #body> </template>
-  </HModel>
+  <div>
+    <HModel>
+      <template #head> {{ gameName }}</template>
+      <template #body>
+        <div class="box" v-for="(item, index) in feedback" :key="index">
+          <div class="parent">
+            <div class="par-left">
+              <div class="img-box">
+                <img src="../../assets/huLogo1.jpg" />
+              </div>
+            </div>
+            <div class="par-right">
+              <div class="first">
+                <div class="name">
+                  {{
+                    item.tj_user == 1
+                      ? item.zhubo_username
+                      : item.youxizuozhe_username
+                  }}
+                </div>
+                <div class="more">
+                  <el-icon><MoreFilled /></el-icon>
+                </div>
+              </div>
+              <div class="second">
+                {{ item.content }}
+              </div>
+              <div class="third">
+                <div class="time" style="color: #999">
+                  {{ formatTime(item.ctime) }}
+                </div>
+                <div
+                  class="reply"
+                  style="display: flex; align-items: center"
+                  @click="replyParent(index)"
+                >
+                  <el-icon style="margin-right: 5px"><ChatRound /></el-icon>回复
+                </div>
+              </div>
+              <div style="display: flex" v-if="replyStates[index]">
+                <el-input
+                  style="width: 70%; margin-right: 20px"
+                  placeholder="请输入回复内容"
+                  type="text"
+                  v-model="parentContent"
+                  @keyup.enter="replyParentConfirm(item.game_feedback_id)"
+                />
+                <el-button
+                  type="primary"
+                  @click="replyParentConfirm(item.game_feedback_id)"
+                  >回复</el-button
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="children"
+            v-for="(child, index) in item.childrens"
+            :key="index"
+          >
+            <div class="par-left">
+              <div class="img-box">
+                <img v-if="child.tj_user == 1" src="../../assets/huLogo1.jpg" />
+                <img v-else src="../../assets/huLogo.jpg" />
+              </div>
+            </div>
+            <div class="par-right">
+              <div class="first">
+                <div class="name" style="display: flex; align-items: center">
+                  <span>
+                    {{
+                      child.tj_user == 1
+                        ? child.zhubo_username
+                        : child.youxizuozhe_username
+                    }}
+                  </span>
+                  <span
+                    ><el-icon style="color: #999"><CaretRight /></el-icon
+                  ></span>
+                  <span>
+                    {{
+                      child.tj_user == 2
+                        ? child.zhubo_username
+                        : child.youxizuozhe_username
+                    }}
+                  </span>
+                </div>
+                <div class="more">
+                  <el-icon><MoreFilled /></el-icon>
+                </div>
+              </div>
+              <div class="second">
+                {{ child.content }}
+              </div>
+              <div class="third">
+                <div class="time" style="color: #999">
+                  {{ formatTime(child.ctime) }}
+                </div>
+                <div
+                  class="reply"
+                  style="display: flex; align-items: center"
+                  @click="replyChild(index)"
+                  v-if="child.tj_user == 1"
+                >
+                  <el-icon style="margin-right: 5px"><ChatRound /></el-icon>回复
+                </div>
+              </div>
+              <div style="display: flex" v-if="replyStatesChild[index]">
+                <el-input
+                  style="width: 70%; margin-right: 20px"
+                  placeholder="请输入回复内容"
+                  type="text"
+                  v-model="childContent"
+                  @keyup.enter="replyChildConfirm(child.game_feedback_id)"
+                />
+                <el-button
+                  type="primary"
+                  @click="replyChildConfirm(child.game_feedback_id)"
+                  >回复</el-button
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </HModel>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import { onMounted, ref } from 'vue'
 import HModel from '../../components/HModel/index.vue'
+import { MoreFilled, ChatRound, CaretRight } from '@element-plus/icons-vue'
+import { getFeedbackList, submitFeedback } from '../../api/software'
 import router from '../../router'
+import Moment from 'moment'
+const gameId = ref<any>()
+const gameName = ref<any>()
+const feedback = ref<any>()
+const replyStates = ref<any>({}) // 父级
+const replyStatesChild = ref<any>({}) // 子级
+const num = ref<number>(0)
+const childNum = ref<number>(0)
+const parentContent = ref<string>('') // 父级回复内容
+const childContent = ref<string>('') // 子级回复内容
+// 回复父级-打开input
+function replyParent(index: any) {
+  num.value++
+  replyStates.value = {} // 清空所有回复状态
+  if (num.value % 2 != 0) {
+    replyStates.value[index] = true
+  } else {
+    replyStates.value[index] = false
+    parentContent.value = ''
+  }
+  console.log(num.value)
+}
+// 回复父级
+async function replyParentConfirm(id: any) {
+  console.log(parentContent.value)
+  await submitFeedback({
+    content: parentContent.value,
+    game_feedback_id: id
+  })
+  parentContent.value = ''
+  replyStates.value = {}
+  query()
+}
+// 回复子级-打开input
+function replyChild(index: any) {
+  childNum.value++
+  replyStatesChild.value = {} // 清空所有回复状态
+  if (childNum.value % 2 != 0) {
+    replyStatesChild.value[index] = true
+  } else {
+    replyStatesChild.value[index] = false
+    parentContent.value = ''
+  }
+}
+// 回复子级
+async function replyChildConfirm(id: any) {
+  console.log(childContent.value)
+  await submitFeedback({
+    content: childContent.value,
+    game_feedback_id: id
+  })
+  childContent.value = ''
+  replyStatesChild.value = {}
+  query()
+}
+// 查询
+async function query() {
+  try {
+    const res = await getFeedbackList({
+      page: 1,
+      game_id: gameId.value
+    })
+    feedback.value = res.data?.list
+  } catch (error) {
+    console.error('Error fetching data: ', error)
+  }
+}
+onMounted(() => {
+  gameId.value = router.currentRoute.value.query.id
+  gameName.value = router.currentRoute.value.query.name
+  query()
+})
+// 时间格式化
+function formatTime(time: number) {
+  return time ? Moment(time * 1000).format('YYYY-MM-DD') : '-'
+}
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.parent {
+  display: flex;
+}
+.par-left {
+  width: 60px;
+  height: 100%;
+  // background-color: purple;
+  .img-box {
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+.par-right {
+  flex: 1;
+  // background: skyblue;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  .first {
+    height: 35px;
+    // background: orange;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    .name {
+      font-weight: 900;
+    }
+  }
+  .second {
+    flex: 1;
+  }
+  .third {
+    height: 30px;
+    // background: red;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .reply {
+      color: rgb(132, 147, 165);
+    }
+    .reply:hover {
+      cursor: pointer; // 小手
+      color: #75869a;
+    }
+  }
+}
+
+.children {
+  margin-left: 60px;
+  // width: 100%;
+  // height: 50px;
+  // background: red;
+  display: flex;
+}
+</style>
