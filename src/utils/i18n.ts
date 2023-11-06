@@ -13,6 +13,7 @@ const i18n = createI18n({
       revenue: 'Game revenue',
       discount: 'Game discount',
       personal: 'Personal center',
+      transfer: 'Transfer',
       system: {
         logout: 'Log out',
         min_tx_price: 'Minimum withdrawal amount', // 提现最小金额
@@ -85,6 +86,7 @@ const i18n = createI18n({
       revenue: '游戏收益',
       discount: '游戏折扣',
       personal: '个人中心',
+      transfer: '转账',
       system: {
         logout: '退出登录',
         min_tx_price: '提现最小金额',
@@ -157,6 +159,7 @@ const i18n = createI18n({
       revenue: '遊戲收益',
       discount: '遊戲折扣',
       personal: '個人中心',
+      transfer: '轉賬',
       system: {
         logout: '退出登錄',
         min_tx_price: '提現最小金額',

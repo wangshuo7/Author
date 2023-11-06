@@ -49,3 +49,8 @@ export const getFeedbackList = (data: any) => {
 export const submitFeedback = (data: any) => {
   return request.post('/youxizuozhe/feedback/add', data)
 }
+
+// 反馈列表二级
+export const getFeedMoreList = (data: any) => {
+  return request.post('/youxizuozhe/feedback/index_child', data)
+}
