@@ -52,7 +52,7 @@
         <el-table-column :label="$t('table.utime')">
           <template #default="{ row }">{{ formatTime(row.uptime) }}</template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('table.operate')" width="400">
+        <el-table-column fixed="right" :label="$t('table.operate')" width="470">
           <template #default="{ row }">
             <div style="display: flex">
               <el-button @click="editLanguage(row)" type="success">{{
@@ -64,6 +64,7 @@
               <el-button @click="addVersion(row)">版本</el-button>
               <el-button @click="editNotice(row)">编辑公告</el-button>
               <el-button @click="goFeedback(row)">反馈</el-button>
+              <el-button @click="goDiscount(row)">折扣</el-button>
             </div>
           </template>
         </el-table-column>
@@ -339,6 +340,16 @@ function addVersion(row: any) {
 function goFeedback(row: any) {
   router.push({
     name: 'Feedback',
+    query: {
+      id: row.game_id,
+      name: row.title
+    }
+  })
+}
+// 游戏折扣
+function goDiscount(row: any) {
+  router.push({
+    name: 'Discount',
     query: {
       id: row.game_id,
       name: row.title

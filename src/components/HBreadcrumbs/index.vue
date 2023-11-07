@@ -2,7 +2,9 @@
   <div class="bread">
     <el-breadcrumb :separator-icon="ArrowRight">
       <el-breadcrumb-item v-for="(item, index) in breadcrumbItems" :key="index">
-        <router-link :to="item.to">{{ $t(item.text) }}</router-link>
+        <router-link :to="item.to" @click="handleBreadcrumbClick(item.to)">{{
+          $t(item.text)
+        }}</router-link>
       </el-breadcrumb-item>
     </el-breadcrumb>
   </div>
@@ -28,6 +30,15 @@ const generateBreadcrumb = (path: any) => {
   }))
 }
 
+const handleBreadcrumbClick = (to: string) => {
+  // 使用 router.push() 来进行导航，但不刷新页面
+  router.push(to).catch((error) => {
+    if (error.name !== 'NavigationDuplicated') {
+      throw error
+    }
+  })
+}
+
 onMounted(() => {
   updateBreadcrumb()
 
@@ -37,6 +48,7 @@ onMounted(() => {
   })
 })
 </script>
+
 <style lang="less" scoped>
 .bread {
   height: 50px;

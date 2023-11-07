@@ -9,22 +9,6 @@
           <el-icon><Orange /></el-icon>
           <template #title>{{ $t('menu.software') }}</template>
         </el-menu-item>
-        <el-menu-item index="controls" @click="goControls">
-          <el-icon><icon-menu /></el-icon>
-          <template #title>{{ $t('menu.controls') }}</template>
-        </el-menu-item>
-        <el-menu-item index="feedback" @click="goFeedback">
-          <el-icon><SwitchFilled /></el-icon>
-          <template #title>{{ $t('menu.feedback') }}</template>
-        </el-menu-item>
-        <el-menu-item index="revenue" @click="goRevenue">
-          <el-icon><Key /></el-icon>
-          <template #title>{{ $t('menu.revenue') }}</template>
-        </el-menu-item>
-        <el-menu-item index="discount" @click="goDiscount">
-          <el-icon><CreditCard /></el-icon>
-          <template #title>{{ $t('menu.discount') }}</template>
-        </el-menu-item>
         <el-sub-menu index="personal">
           <template #title>
             <el-icon><setting /></el-icon>
@@ -46,30 +30,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {
-  SwitchFilled,
-  Menu as IconMenu,
-  Orange,
-  Setting,
-  CreditCard,
-  Key
-} from '@element-plus/icons-vue'
+import { Orange, Setting } from '@element-plus/icons-vue'
 
 import router from '../../../router'
 function goSoftware() {
   router.push('/software')
-}
-function goControls() {
-  router.push('/controls')
-}
-function goFeedback() {
-  router.push('/feedback')
-}
-function goRevenue() {
-  router.push('/revenue')
-}
-function goDiscount() {
-  router.push('/discount')
 }
 function goPersonal() {
   router.push('/personal')

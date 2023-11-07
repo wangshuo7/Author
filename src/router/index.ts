@@ -18,46 +18,38 @@ const routes = [
         name: 'next',
         component: () => import('@/views/Welcome/next.vue')
       },
+      // 游戏软件
       {
         path: '/software',
         name: 'Software',
-        component: () => import('@/views/Software/index.vue')
+        component: () => import('@/views/Software/index.vue'),
+        meta: { keepAlive: true } // 标记需要缓存的组件
       },
+      // 游戏软件-版本
       {
         path: '/software/version',
         name: 'Version',
         component: () => import('@/views/Software/version.vue')
       },
+      // 游戏软件-反馈
       {
         path: '/software/feedback',
         name: 'Feedback',
         component: () => import('@/views/Software/feedback.vue')
       },
+      // 游戏软件-折扣
       {
-        path: '/controls',
-        name: 'Controls',
-        component: () => import('@/views/Controls/index.vue')
-      },
-      {
-        path: '/feedback',
-        name: 'Feedback1',
-        component: () => import('@/views/Feedback/index.vue')
-      },
-      {
-        path: '/revenue',
-        name: 'Revenue',
-        component: () => import('@/views/Revenue/index.vue')
-      },
-      {
-        path: '/discount',
+        path: '/software/discount',
         name: 'Discount',
-        component: () => import('@/views/Discount/index.vue')
+        component: () => import('@/views/Software/discount.vue')
       },
+      // 个人中心
       {
         path: '/personal',
         name: 'Personal',
         component: () => import('@/views/Personal/index.vue')
       },
+      // 个人中心-转账
       {
         path: '/personal/transfer',
         name: 'Transfer',

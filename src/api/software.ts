@@ -54,3 +54,16 @@ export const submitFeedback = (data: any) => {
 export const getFeedMoreList = (data: any) => {
   return request.post('/youxizuozhe/feedback/index_child', data)
 }
+
+// 折扣列表
+export const getDiscountList = (data: any) => {
+  return request.post('/youxizuozhe/youhuiquan/index', data)
+}
+// 添加折扣
+export const addDiscount = (data: any) => {
+  return request.post('/youxizuozhe/youhuiquan/add', data)
+}
+// 删除折扣
+export const delDiscount = (data: any) => {
+  return request.post('/youxizuozhe/youhuiquan/del', data)
+}
