@@ -173,6 +173,8 @@ import { getFeedbackList, submitFeedback } from '../../api/software'
 import MoreFeedback from './component/MoreFeedback.vue'
 import router from '../../router'
 import Moment from 'moment'
+import { ElMessage } from 'element-plus'
+
 const gameId = ref<any>()
 const gameName = ref<any>()
 const feedback = ref<any>()
@@ -215,10 +217,15 @@ function replyParent(index: any) {
 // 回复父级
 async function replyParentConfirm(id: any) {
   console.log(parentContent.value)
-  await submitFeedback({
+  const res: any = await submitFeedback({
     content: parentContent.value,
     game_feedback_id: id
   })
+  if (res.code === 200) {
+    ElMessage.success('回复成功')
+  } else {
+    ElMessage.error(res.msg)
+  }
   parentContent.value = ''
   replyStates.value = {}
   query()
@@ -237,10 +244,15 @@ function replyChild(id: any) {
 // 回复子级
 async function replyChildConfirm(id: any) {
   console.log(childContent.value)
-  await submitFeedback({
+  const res: any = await submitFeedback({
     content: childContent.value,
     game_feedback_id: id
   })
+  if (res.code === 200) {
+    ElMessage.success('回复成功')
+  } else {
+    ElMessage.error(res.msg)
+  }
   childContent.value = ''
   replyStatesChild.value = {}
   query()

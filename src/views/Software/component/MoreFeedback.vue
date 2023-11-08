@@ -89,6 +89,7 @@ import { onMounted, ref } from 'vue'
 import { getFeedMoreList, submitFeedback } from '../../../api/software'
 import { ChatRound } from '@element-plus/icons-vue'
 import moment from 'moment'
+import { ElMessage } from 'element-plus'
 const props = defineProps<{
   visible: boolean
   game_id: any
@@ -125,10 +126,15 @@ function replyChild(id: any) {
 // 回复子级
 async function replyChildConfirm(id: any) {
   console.log(childContent.value)
-  await submitFeedback({
+  const res: any = await submitFeedback({
     content: childContent.value,
     game_feedback_id: id
   })
+  if (res.code === 200) {
+    ElMessage.success('回复成功')
+  } else {
+    ElMessage.error(res.msg)
+  }
   childContent.value = ''
   replyStatesChild.value = {}
   query()
