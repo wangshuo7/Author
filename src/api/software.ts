@@ -1,13 +1,7 @@
 import request from '../utils/request'
-import {
-  softwareData
-  // languageAdd,
-  // languageEdit,
-  // languageDel,
-  // languageInfo
-} from '../type/language'
+
 // 列表
-export const getSoftwareList = (data: softwareData) => {
+export const getSoftwareList = (data: any) => {
   return request.post('/youxizuozhe/game/index', data)
 }
 // 添加
