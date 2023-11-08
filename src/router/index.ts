@@ -45,13 +45,13 @@ const routes = [
       },
       // 个人中心
       {
-        path: '/personal',
-        name: 'Personal',
-        component: () => import('@/views/Personal/index.vue')
+        path: '/info',
+        name: 'Info',
+        component: () => import('@/views/Personal/info.vue')
       },
       // 个人中心-转账
       {
-        path: '/personal/transfer',
+        path: '/transfer',
         name: 'Transfer',
         component: () => import('@/views/Personal/transfer.vue')
       }

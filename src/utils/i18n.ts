@@ -12,7 +12,7 @@ const i18n = createI18n({
       feedback: 'Feedback Management',
       revenue: 'Game revenue',
       discount: 'Game discount',
-      personal: 'Personal center',
+      info: 'Personal Info',
       transfer: 'Transfer',
       system: {
         logout: 'Log out',
@@ -85,7 +85,7 @@ const i18n = createI18n({
       feedback: '反馈管理',
       revenue: '游戏收益',
       discount: '游戏折扣',
-      personal: '个人中心',
+      info: '个人信息',
       transfer: '转账',
       system: {
         logout: '退出登录',
@@ -158,7 +158,7 @@ const i18n = createI18n({
       feedback: '反饋管理',
       revenue: '遊戲收益',
       discount: '遊戲折扣',
-      personal: '個人中心',
+      info: '個人信息',
       transfer: '轉賬',
       system: {
         logout: '退出登錄',

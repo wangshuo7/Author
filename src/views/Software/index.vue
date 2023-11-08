@@ -6,6 +6,7 @@
           @keyup.enter="query"
           v-model="queryForm.title"
           clearable
+          placeholder="请输入标题"
         ></el-input>
         <el-button style="margin: 0 20px" type="primary" @click="query">{{
           $t('button.query')
@@ -28,31 +29,35 @@
         style="width: 100%"
         border
       >
-        <el-table-column label="ID">
+        <el-table-column label="ID" width="100">
           <template #default="{ row }">{{ row.game_id }}</template>
         </el-table-column>
-        <el-table-column :label="$t('table.title')">
+        <el-table-column :label="$t('table.title')" width="200">
           <template #default="{ row }">{{ row.title }}</template>
         </el-table-column>
-        <el-table-column label="价格">
+        <el-table-column label="价格" width="250">
           <template #default="{ row }">{{ row.price }}</template>
         </el-table-column>
         <!-- <el-table-column label="打折">
           <template #default="{ row }">{{ row.dazhe }}</template>
         </el-table-column> -->
-        <el-table-column label="促销价格">
+        <el-table-column label="促销价格" width="250">
           <template #default="{ row }">{{ row.cuxiao_price }}</template>
         </el-table-column>
-        <el-table-column :label="$t('table.min_price')">
+        <el-table-column :label="$t('table.min_price')" width="300">
           <template #default="{ row }">{{ row.min_price }}</template>
         </el-table-column>
-        <el-table-column :label="$t('table.ctime')">
+        <el-table-column :label="$t('table.ctime')" width="300">
           <template #default="{ row }">{{ formatTime(row.ctime) }}</template>
         </el-table-column>
-        <el-table-column :label="$t('table.utime')">
+        <el-table-column :label="$t('table.utime')" width="300">
           <template #default="{ row }">{{ formatTime(row.uptime) }}</template>
         </el-table-column>
-        <el-table-column fixed="right" :label="$t('table.operate')" width="470">
+        <el-table-column
+          fixed="right"
+          :label="$t('table.operate')"
+          min-width="470"
+        >
           <template #default="{ row }">
             <div style="display: flex">
               <el-button @click="editLanguage(row)" type="success">{{
@@ -226,7 +231,6 @@ import {
   delSoftware,
   editGameNotice
 } from '../../api/software'
-import { langList } from '../../type/language'
 import Moment from 'moment'
 import HModel from '../../components/HModel/index.vue'
 import { ElMessage } from 'element-plus'
@@ -243,7 +247,7 @@ const queryForm = ref<any>({
 const noticeForm = ref<any>({
   gonggao: ''
 }) // 公告
-const tableData = ref<langList[]>()
+const tableData = ref<any>()
 const dialogVisible = ref<boolean>()
 const operation = ref<string>('') // 操作 add \ edit \ version
 const editId = ref<number>() // 编辑时所用id
@@ -267,7 +271,7 @@ function handleCurrentChange(newPage: number) {
 }
 // 添加套餐
 function addPackage() {
-  form.value.taocan.push({ tprice: '', tdays: '' })
+  form.value?.taocan?.push({ tprice: '', tdays: '' })
 }
 // 删除套餐
 function removePackage(index: any) {

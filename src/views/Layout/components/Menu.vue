@@ -14,12 +14,12 @@
             <el-icon><setting /></el-icon>
             <span>{{ $t('menu.personal') }}</span>
           </template>
-          <el-menu-item index="personal-1" @click="goPersonal"
-            >个人信息</el-menu-item
-          >
-          <el-menu-item index="personal-2" @click="goTransfer"
-            >转账</el-menu-item
-          >
+          <el-menu-item index="personal-1" @click="goInfo">{{
+            $t('info')
+          }}</el-menu-item>
+          <el-menu-item index="personal-2" @click="goTransfer">{{
+            $t('transfer')
+          }}</el-menu-item>
         </el-sub-menu>
         <!-- <el-menu-item index="personal" @click="goPersonal">
           <el-icon><setting /></el-icon>
@@ -36,11 +36,11 @@ import router from '../../../router'
 function goSoftware() {
   router.push('/software')
 }
-function goPersonal() {
-  router.push('/personal')
+function goInfo() {
+  router.push('/info')
 }
 function goTransfer() {
-  router.push('/personal/transfer')
+  router.push('/transfer')
 }
 </script>
 <style lang="less">

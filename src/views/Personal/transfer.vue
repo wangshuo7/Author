@@ -1,10 +1,10 @@
 <template>
   <div style="width: 500px">
-    <el-form :model="form" label-width="120px">
-      <el-form-item label="转账">
+    <el-form ref="ruleFormRef" :model="form" :rules="rules" label-width="140px">
+      <el-form-item label="转账" prop="toid">
         <el-input v-model="form.toid" placeholder="请输入转账id"></el-input>
       </el-form-item>
-      <el-form-item label="云豆">
+      <el-form-item label="云豆" prop="tprice">
         <el-input v-model="form.tprice" placeholder="请输入云豆数量"></el-input>
       </el-form-item>
       <el-form-item>
@@ -16,26 +16,36 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
+import { reactive, ref } from 'vue'
+import { ElMessage, FormInstance } from 'element-plus'
 import { transferAccounts } from '../../api/personal'
-import { ref } from 'vue'
-
+const ruleFormRef = ref<FormInstance>()
+const rules = reactive({
+  toid: [{ required: true, message: '请填写转账ID', blur }],
+  tprice: [{ required: true, message: '请填写云豆数量', blur }]
+})
 const form = ref<any>({
   toid: '',
   tprice: ''
 })
 async function submit() {
-  const res: any = await transferAccounts({
-    toid: form.value.toid,
-    tprice: form.value.tprice
+  ruleFormRef.value?.validate(async (valid) => {
+    if (valid) {
+      const res: any = await transferAccounts({
+        toid: form.value.toid,
+        tprice: form.value.tprice
+      })
+      if (res.code === 200) {
+        return ElMessage.success(res.data)
+      }
+      ElMessage.error(res.data)
+    } else {
+      // 表单验证未通过
+    }
   })
-  if (res.code === 200) {
-    return ElMessage.success(res.data)
-  }
-  ElMessage.error(res.data)
 }
 function cancel() {
-  form.value = {}
+  ruleFormRef.value?.resetFields()
 }
 </script>
 
