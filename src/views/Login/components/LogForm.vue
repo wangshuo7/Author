@@ -39,30 +39,22 @@ const rules = reactive<FormRules<login_type>>({
     }
   ]
 })
-async function onSubmit() {
-  // ruleFormRef.value?.validate((valid) => {
-  //   if (valid) {
-  //     // 表单验证通过
-  //     const userInfo = {
-  //       username: form.username,
-  //       password: form.password
-  //     }
-  //     console.log(userInfo)
-
-  //   } else {
-  //     // 表单验证未通过
-  //   }
-  // })
-  const send_data = {
-    login_type: form.login_type,
-    username: form.username,
-    password: form.password
-  }
-  const res: any = await login(send_data)
-  if (res?.code === 200) {
-    ElMessage.success('登录成功')
-    // localStorage.setItem('authToken', res?.data?.t)
-  }
+function onSubmit() {
+  ruleFormRef.value?.validate(async (valid) => {
+    if (valid) {
+      const res: any = await login({
+        login_type: form.login_type,
+        username: form.username,
+        password: form.password
+      })
+      if (res?.code === 200) {
+        ElMessage.success('登录成功')
+        // localStorage.setItem('authToken', res?.data?.t)
+      }
+    } else {
+      // 表单验证未通过
+    }
+  })
 }
 </script>
 
