@@ -1,5 +1,10 @@
 <template>
   <div>
+    <el-page-header @back="router.back()">
+      <template #content>
+        <span>{{ game_name }}</span>
+      </template>
+    </el-page-header>
     <div class="query">
       <el-form :form="queryForm" label-width="80px" @submit.prevent inline>
         <el-form-item :label="$t('table.title')">
@@ -26,7 +31,7 @@
     </div>
     <HModel>
       <template #head>
-        <span style="font-weight: bolder">游戏折扣 ({{ game_name }})</span>
+        <span style="font-weight: bolder">游戏折扣</span>
         <div>
           <el-button type="primary" @click="dialogVisible = true"
             >添加</el-button

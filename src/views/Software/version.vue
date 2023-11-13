@@ -1,8 +1,13 @@
 <template>
   <div>
+    <el-page-header @back="router.back()">
+      <template #content>
+        <span>{{ game_name }}</span>
+      </template>
+    </el-page-header>
     <HModel>
       <template #head>
-        <span style="font-weight: bolder">游戏版本 ({{ game_name }})</span>
+        <span style="font-weight: bolder">游戏版本</span>
         <div>
           <el-button type="primary" @click="dialogVisible = true"
             >添加</el-button

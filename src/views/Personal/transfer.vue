@@ -15,6 +15,11 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+  name: 'Transfer'
+}
+</script>
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { ElMessage, FormInstance } from 'element-plus'

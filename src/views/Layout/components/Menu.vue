@@ -4,44 +4,40 @@
       <img class="logo-img" src="@/assets/huLogo1.jpg" alt="" />
     </div>
     <div>
-      <el-menu default-active="1" class="el-menu-vertical-demo">
-        <el-menu-item index="software" @click="goSoftware">
+      <el-menu :default-active="getActiveMenu(route.path)" class="el-menu-vertical-demo" router>
+        <el-menu-item index="/software">
           <el-icon><Orange /></el-icon>
           <template #title>{{ $t('menu.software') }}</template>
         </el-menu-item>
-        <el-sub-menu index="personal">
+        <el-sub-menu index="/personal">
           <template #title>
             <el-icon><setting /></el-icon>
             <span>{{ $t('menu.personal') }}</span>
           </template>
-          <el-menu-item index="personal-1" @click="goInfo">{{
+          <el-menu-item index="/info">{{
             $t('info')
           }}</el-menu-item>
-          <el-menu-item index="personal-2" @click="goTransfer">{{
+          <el-menu-item index="/transfer">{{
             $t('transfer')
           }}</el-menu-item>
         </el-sub-menu>
-        <!-- <el-menu-item index="personal" @click="goPersonal">
-          <el-icon><setting /></el-icon>
-          <template #title>{{ $t('menu.personal') }}</template>
-        </el-menu-item> -->
       </el-menu>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { Orange, Setting } from '@element-plus/icons-vue'
-
-import router from '../../../router'
-function goSoftware() {
-  router.push('/software')
-}
-function goInfo() {
-  router.push('/info')
-}
-function goTransfer() {
-  router.push('/transfer')
-}
+import { useRoute } from 'vue-router'
+const route = useRoute()
+const getActiveMenu = (path: string) => {
+  // 检查路径是否以某个标识符开头，例如 '/game'
+  if (path.startsWith('/game')) {
+    return '/game';
+  } else if (path.startsWith('/mine')) {
+    return '/mine';
+  }
+  return path;
+};
 </script>
 <style lang="less">
 .el-menu-vertical-demo:not(.el-menu--collapse) {

@@ -222,6 +222,11 @@
   </el-dialog>
 </template>
 
+<script lang="ts">
+export default {
+  name: 'Software'
+}
+</script>
 <script lang="ts" setup>
 import { ref, onMounted, watch } from 'vue'
 import {
