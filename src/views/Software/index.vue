@@ -1,6 +1,6 @@
 <template>
   <div class="query">
-    <el-form :form="queryForm" label-width="80px" @submit.prevent>
+    <el-form :form="queryForm" label-width="50px" @submit.prevent>
       <el-form-item :label="$t('table.title')">
         <el-input
           @keyup.enter="query"
@@ -490,7 +490,8 @@ function formatTime(time: number) {
   align-items: center;
 }
 .query {
-  margin-top: 40px;
+  padding: 20px;
+  padding-bottom: 0;
   .el-input {
     width: 250px;
   }
