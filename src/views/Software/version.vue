@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <session>
     <el-page-header @back="router.back()">
       <template #content>
         <span>{{ game_name }}</span>
@@ -74,7 +74,7 @@
         </span>
       </template>
     </el-dialog>
-  </div>
+  </session>
 </template>
 
 <script lang="ts" setup>

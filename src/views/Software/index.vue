@@ -1,96 +1,100 @@
 <template>
-  <div class="query">
-    <el-form :form="queryForm" label-width="50px" @submit.prevent>
-      <el-form-item :label="$t('table.title')">
-        <el-input
-          @keyup.enter="query"
-          v-model="queryForm.title"
-          clearable
-          placeholder="请输入标题"
-        ></el-input>
-        <el-button style="margin: 0 20px" type="primary" @click="query">{{
-          $t('button.query')
-        }}</el-button>
-        <el-button @click="onClear">{{ $t('button.clear') }}</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
-  <HModel>
-    <template #head>
-      <span style="font-weight: bolder">{{ $t('menu.software') }}</span>
-      <div>
-        <el-button type="primary" @click="onAddSoftware">添加</el-button>
-      </div>
-    </template>
-    <template #body>
-      <el-table
-        v-loading="loading"
-        :data="tableData"
-        style="width: 100%"
-        border
-      >
-        <el-table-column label="ID" width="100">
-          <template #default="{ row }">{{ row.game_id }}</template>
-        </el-table-column>
-        <el-table-column :label="$t('table.title')" width="200">
-          <template #default="{ row }">{{ row.title }}</template>
-        </el-table-column>
-        <el-table-column label="价格" width="250">
-          <template #default="{ row }">{{ row.price }}</template>
-        </el-table-column>
-        <!-- <el-table-column label="打折">
+  <session>
+    <div class="query">
+      <el-form :form="queryForm" label-width="50px" @submit.prevent>
+        <el-form-item :label="$t('table.title')">
+          <el-input
+            @keyup.enter="query"
+            v-model="queryForm.title"
+            clearable
+            placeholder="请输入标题"
+          ></el-input>
+          <el-button style="margin: 0 20px" type="primary" @click="query">{{
+            $t('button.query')
+          }}</el-button>
+          <el-button @click="onClear">{{ $t('button.clear') }}</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+  </session>
+  <session>
+    <HModel>
+      <template #head>
+        <span style="font-weight: bolder">{{ $t('menu.software') }}</span>
+        <div>
+          <el-button type="primary" @click="onAddSoftware">添加</el-button>
+        </div>
+      </template>
+      <template #body>
+        <el-table
+          v-loading="loading"
+          :data="tableData"
+          style="width: 100%"
+          border
+        >
+          <el-table-column label="ID" width="100">
+            <template #default="{ row }">{{ row.game_id }}</template>
+          </el-table-column>
+          <el-table-column :label="$t('table.title')" width="200">
+            <template #default="{ row }">{{ row.title }}</template>
+          </el-table-column>
+          <el-table-column label="价格" width="250">
+            <template #default="{ row }">{{ row.price }}</template>
+          </el-table-column>
+          <!-- <el-table-column label="打折">
           <template #default="{ row }">{{ row.dazhe }}</template>
         </el-table-column> -->
-        <el-table-column label="促销价格" width="250">
-          <template #default="{ row }">{{ row.cuxiao_price }}</template>
-        </el-table-column>
-        <el-table-column :label="$t('table.min_price')" width="300">
-          <template #default="{ row }">{{ row.min_price }}</template>
-        </el-table-column>
-        <el-table-column :label="$t('table.ctime')" width="300">
-          <template #default="{ row }">{{ formatTime(row.ctime) }}</template>
-        </el-table-column>
-        <el-table-column :label="$t('table.utime')" width="300">
-          <template #default="{ row }">{{ formatTime(row.uptime) }}</template>
-        </el-table-column>
-        <el-table-column
-          fixed="right"
-          :label="$t('table.operate')"
-          min-width="470"
-        >
-          <template #default="{ row }">
-            <div style="display: flex">
-              <el-button @click="editLanguage(row)" type="success">{{
-                $t('button.edit')
-              }}</el-button>
-              <el-button @click="delLanguage(row)" type="danger">{{
-                $t('button.del')
-              }}</el-button>
-              <el-button @click="addVersion(row)">版本</el-button>
-              <el-button @click="editNotice(row)">编辑公告</el-button>
-              <el-button @click="goFeedback(row)">反馈</el-button>
-              <el-button @click="goDiscount(row)">折扣</el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
-    </template>
-    <template #foot>
-      <div class="pagination">
-        <el-pagination
-          background
-          layout="total,prev, pager, next, sizes"
-          :current-page.sync="currentPage"
-          :page-size="pageSize"
-          :page-sizes="[10, 20, 30]"
-          :total="totalItems"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        >
-        </el-pagination>
-      </div>
-    </template>
-  </HModel>
+          <el-table-column label="促销价格" width="250">
+            <template #default="{ row }">{{ row.cuxiao_price }}</template>
+          </el-table-column>
+          <el-table-column :label="$t('table.min_price')" width="300">
+            <template #default="{ row }">{{ row.min_price }}</template>
+          </el-table-column>
+          <el-table-column :label="$t('table.ctime')" width="300">
+            <template #default="{ row }">{{ formatTime(row.ctime) }}</template>
+          </el-table-column>
+          <el-table-column :label="$t('table.utime')" width="300">
+            <template #default="{ row }">{{ formatTime(row.uptime) }}</template>
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            :label="$t('table.operate')"
+            min-width="470"
+          >
+            <template #default="{ row }">
+              <div style="display: flex">
+                <el-button @click="editLanguage(row)" type="success">{{
+                  $t('button.edit')
+                }}</el-button>
+                <el-button @click="delLanguage(row)" type="danger">{{
+                  $t('button.del')
+                }}</el-button>
+                <el-button @click="addVersion(row)">版本</el-button>
+                <el-button @click="editNotice(row)">编辑公告</el-button>
+                <el-button @click="goFeedback(row)">反馈</el-button>
+                <el-button @click="goDiscount(row)">折扣</el-button>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
+      <template #foot>
+        <div class="pagination">
+          <el-pagination
+            background
+            layout="total,prev, pager, next, sizes"
+            :current-page.sync="currentPage"
+            :page-size="pageSize"
+            :page-sizes="[10, 20, 30]"
+            :total="totalItems"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          >
+          </el-pagination>
+        </div>
+      </template>
+    </HModel>
+  </session>
   <el-dialog
     v-model="dialogVisible"
     :title="
@@ -490,8 +494,8 @@ function formatTime(time: number) {
   align-items: center;
 }
 .query {
-  padding: 20px;
-  padding-bottom: 0;
+  // padding: 20px;
+  // padding-bottom: 0;
   .el-input {
     width: 250px;
   }

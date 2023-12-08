@@ -14,6 +14,10 @@
           router
           :default-openeds="['/personal']"
         >
+          <el-menu-item index="/home">
+            <el-icon><Monitor /></el-icon>
+            <template #title>{{ $t('home') }}</template>
+          </el-menu-item>
           <el-menu-item index="/software">
             <el-icon><Orange /></el-icon>
             <template #title>{{ $t('menu.software') }}</template>
@@ -33,7 +37,7 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { Orange, Setting } from '@element-plus/icons-vue'
+import { Orange, Setting, Monitor } from '@element-plus/icons-vue'
 import { useRoute } from 'vue-router'
 import { useCollapseStore } from '../../../store/collapse'
 const collapseStore = useCollapseStore()

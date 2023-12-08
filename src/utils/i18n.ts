@@ -5,6 +5,7 @@ const i18n = createI18n({
   messages: {
     en: {
       // 面包屑
+      home: 'Home',
       welcome: 'welcome',
       software: 'Game software',
       version: 'Game Version',
@@ -78,6 +79,7 @@ const i18n = createI18n({
       }
     },
     zh: {
+      home: '首页',
       welcome: '欢迎',
       software: '游戏软件',
       version: '游戏版本',
@@ -151,6 +153,7 @@ const i18n = createI18n({
       }
     },
     tw: {
+      home: '首頁',
       welcome: '歡迎',
       software: '遊戲軟件',
       version: '遊戲版本',

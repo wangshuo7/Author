@@ -4,9 +4,15 @@ import Login from '@/views/Login/index.vue'
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'Layout',
+    redirect: '/home',
     component: Layout,
     children: [
+      {
+        path: '/home',
+        name: 'Home',
+        component: () => import('@/views/Home/index.vue')
+      },
       // 游戏软件
       {
         path: '/software',

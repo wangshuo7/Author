@@ -1,89 +1,98 @@
 <template>
   <div>
-    <el-page-header @back="router.back()">
-      <template #content>
-        <span>{{ game_name }}</span>
-      </template>
-    </el-page-header>
-    <div class="query">
-      <el-form :form="queryForm" label-width="80px" @submit.prevent inline>
-        <el-form-item :label="$t('table.title')">
-          <el-input
-            placeholder="请输入标题"
-            @keyup.enter="query"
-            v-model="queryForm.title"
-            clearable
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="类型">
-          <el-select v-model="queryForm.type" placeholder="请选择" clearable>
-            <el-option value="1" label="折扣券" />
-            <el-option value="2" label="免费激活券" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button style="margin: 0 20px" type="primary" @click="query">{{
-            $t('button.query')
-          }}</el-button>
-          <el-button @click="onClear">{{ $t('button.clear') }}</el-button>
-        </el-form-item>
-      </el-form>
+    <div style="margin: 30px">
+      <el-page-header @back="router.back()">
+        <template #content>
+          <span>{{ game_name }}</span>
+        </template>
+      </el-page-header>
     </div>
-    <HModel>
-      <template #head>
-        <span style="font-weight: bolder">游戏折扣</span>
-        <div>
-          <el-button type="primary" @click="dialogVisible = true"
-            >添加</el-button
-          >
-        </div>
-      </template>
-      <template #body>
-        <el-table :data="tableData" style="width: 100%" :loading="loading">
-          <el-table-column label="ID">
-            <template #default="{ row }">{{ row.id }}</template>
-          </el-table-column>
-          <el-table-column label="标题">
-            <template #default="{ row }">{{ row.title }}</template>
-          </el-table-column>
-          <el-table-column label="类型">
-            <template #default="{ row }">{{
-              row.type === 1 ? '折扣券' : '免费激活券'
-            }}</template>
-          </el-table-column>
-          <el-table-column label="折扣">
-            <template #default="{ row }">{{
-              row.type == 1 ? row.dazhe : '-'
-            }}</template>
-          </el-table-column>
-          <el-table-column label="创建时间">
-            <template #default="{ row }">{{ formatTime(row.ctime) }}</template>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template #default="{ row }">
-              <el-button type="danger" @click="deleteDiscount(row)"
-                >删除</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
-      </template>
-      <template #foot>
-        <div class="pagination">
-          <el-pagination
-            background
-            layout="total, prev, pager, next"
-            :current-page.sync="currentPage"
-            :page-size="pageSize"
-            :page-sizes="[10, 20, 30]"
-            :total="totalItems"
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-          >
-          </el-pagination>
-        </div>
-      </template>
-    </HModel>
+    <session>
+      <div class="query">
+        <el-form :form="queryForm" label-width="80px" @submit.prevent inline>
+          <el-form-item :label="$t('table.title')">
+            <el-input
+              placeholder="请输入标题"
+              @keyup.enter="query"
+              v-model="queryForm.title"
+              clearable
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="类型">
+            <el-select v-model="queryForm.type" placeholder="请选择" clearable>
+              <el-option value="1" label="折扣券" />
+              <el-option value="2" label="免费激活券" />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button style="margin: 0 20px" type="primary" @click="query">{{
+              $t('button.query')
+            }}</el-button>
+            <el-button @click="onClear">{{ $t('button.clear') }}</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </session>
+    <session>
+      <HModel>
+        <template #head>
+          <span style="font-weight: bolder">游戏折扣</span>
+          <div>
+            <el-button type="primary" @click="dialogVisible = true"
+              >添加</el-button
+            >
+          </div>
+        </template>
+        <template #body>
+          <el-table :data="tableData" style="width: 100%" :loading="loading">
+            <el-table-column label="ID">
+              <template #default="{ row }">{{ row.id }}</template>
+            </el-table-column>
+            <el-table-column label="标题">
+              <template #default="{ row }">{{ row.title }}</template>
+            </el-table-column>
+            <el-table-column label="类型">
+              <template #default="{ row }">{{
+                row.type === 1 ? '折扣券' : '免费激活券'
+              }}</template>
+            </el-table-column>
+            <el-table-column label="折扣">
+              <template #default="{ row }">{{
+                row.type == 1 ? row.dazhe : '-'
+              }}</template>
+            </el-table-column>
+            <el-table-column label="创建时间">
+              <template #default="{ row }">{{
+                formatTime(row.ctime)
+              }}</template>
+            </el-table-column>
+            <el-table-column label="操作">
+              <template #default="{ row }">
+                <el-button type="danger" @click="deleteDiscount(row)"
+                  >删除</el-button
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+        </template>
+        <template #foot>
+          <div class="pagination">
+            <el-pagination
+              background
+              layout="total, prev, pager, next"
+              :current-page.sync="currentPage"
+              :page-size="pageSize"
+              :page-sizes="[10, 20, 30]"
+              :total="totalItems"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+            >
+            </el-pagination>
+          </div>
+        </template>
+      </HModel>
+    </session>
+
     <el-dialog v-model="dialogVisible" :title="$t('button.add')" width="50%">
       <div>
         <el-form :model="form" label-width="120px">
@@ -224,7 +233,6 @@ function formatTime(time: number) {
   align-items: center;
 }
 .query {
-  margin-top: 40px;
   .el-input {
     width: 250px;
   }
