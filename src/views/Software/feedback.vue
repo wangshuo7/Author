@@ -218,11 +218,9 @@ function replyParent(index: any) {
     replyStates.value[index] = false
     parentContent.value = ''
   }
-  console.log(num.value)
 }
 // 回复父级
 async function replyParentConfirm(id: any) {
-  console.log(parentContent.value)
   const res: any = await submitFeedback({
     content: parentContent.value,
     game_feedback_id: id
@@ -249,7 +247,6 @@ function replyChild(id: any) {
 }
 // 回复子级
 async function replyChildConfirm(id: any) {
-  console.log(childContent.value)
   const res: any = await submitFeedback({
     content: childContent.value,
     game_feedback_id: id
@@ -280,7 +277,6 @@ onMounted(() => {
   gameId.value = router.currentRoute.value.query.id
   gameName.value = router.currentRoute.value.query.name
   query()
-  // console.log(feedback.value)
 })
 // 时间格式化
 function formatTime(time: number) {

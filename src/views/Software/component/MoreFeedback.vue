@@ -125,7 +125,6 @@ function replyChild(id: any) {
 }
 // 回复子级
 async function replyChildConfirm(id: any) {
-  console.log(childContent.value)
   const res: any = await submitFeedback({
     content: childContent.value,
     game_feedback_id: id

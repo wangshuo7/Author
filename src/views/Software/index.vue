@@ -371,7 +371,6 @@ function goDiscount(row: any) {
 }
 // 弹出框确定
 async function confirm() {
-  console.log(operation.value)
   form.value.game_lang_id = form.value?.game_lang_id?.join(',')
   form.value.game_cate_id = form.value?.game_cate_id?.join(',')
   form.value.game_pingtai_id = form.value?.game_pingtai_id?.join(',')
