@@ -38,6 +38,9 @@
           <el-table-column :label="$t('table.title')" width="200">
             <template #default="{ row }">{{ row.title }}</template>
           </el-table-column>
+          <el-table-column label="简介" width="200">
+            <template #default="{ row }">{{ row.jianjie }}</template>
+          </el-table-column>
           <el-table-column label="价格" width="250">
             <template #default="{ row }">{{ row.price }}</template>
           </el-table-column>
@@ -110,6 +113,9 @@
       <el-form :model="form" label-width="120px">
         <el-form-item :label="$t('table.title')">
           <el-input v-model="form.title"></el-input>
+        </el-form-item>
+        <el-form-item label="简介">
+          <el-input v-model="form.jianjie"></el-input>
         </el-form-item>
         <el-form-item :label="$t('table.icon')">
           <el-input v-model="form.icon"></el-input>
@@ -315,6 +321,7 @@ function editLanguage(row: any) {
   operation.value = '编辑'
   setTimeout(() => {
     form.value.title = row.title
+    form.value.jianjie = row.jianjie
     form.value.icon = row.icon
     form.value.doc_url = row.doc_url
     form.value.game_pingtai_id = row.game_pingtai_id
@@ -445,6 +452,7 @@ function editNotice(row: any) {
 watch(dialogVisible, () => {
   form.value = {
     title: '',
+    jianjie: '',
     icon: '',
     doc_url: '',
     game_pingtai_id: null,
