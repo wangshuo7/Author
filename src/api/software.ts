@@ -61,3 +61,7 @@ export const addDiscount = (data: any) => {
 export const delDiscount = (data: any) => {
   return request.post('/youxizuozhe/youhuiquan/del', data)
 }
+// 七牛云token
+export const getToken = () => {
+  return request.post('/youxizuozhe/my/get_token')
+}

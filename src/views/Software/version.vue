@@ -23,7 +23,9 @@
             <template #default="{ row }">{{ row.banbenhao }}</template>
           </el-table-column>
           <el-table-column label="下载地址">
-            <template #default="{ row }">{{ row.xiazai_url }}</template>
+            <template #default="{ row }">
+              {{ row.xiazai_url }}
+            </template>
           </el-table-column>
           <el-table-column label="更新内容">
             <template #default="{ row }">{{ row.content }}</template>
@@ -49,15 +51,45 @@
         </div>
       </template>
     </HModel>
-    <el-dialog v-model="dialogVisible" :title="$t('button.add')" width="50%">
+    <el-dialog
+      v-model="dialogVisible"
+      :title="$t('button.add')"
+      :close-on-click-modal="false"
+      @close="cancel"
+      width="500px"
+    >
       <div>
-        <el-form :model="form" label-width="120px">
+        <el-form :model="form" label-width="75px">
           <el-form-item label="版本号">
             <el-input v-model="form.banbenhao" />
           </el-form-item>
-          <el-form-item label="下载地址">
-            <el-input v-model="form.xiazai_url" />
+          <el-form-item label="上传游戏">
+            <!-- <el-input v-model="form.xiazai_url" /> -->
+            <div style="width: 100%">
+              <el-upload
+                :before-upload="beforeUpload"
+                :auto-upload="false"
+                :on-change="onChange"
+                :limit="1"
+                :on-exceed="handleExceed"
+                ref="uploadRef"
+                :before-remove="handleRemove"
+              >
+                <el-button type="primary">点击上传</el-button>
+                <template #tip>
+                  <div class="el-upload__tip">
+                    <!-- <el-progress :percentage="50" /> -->
+                  </div>
+                </template>
+              </el-upload>
+            </div>
           </el-form-item>
+          <div style="width: 50%; margin-left: 80px; margin-bottom: 20px">
+            <el-progress
+              v-if="percent !== 0"
+              :percentage="Math.floor(percent)"
+            />
+          </div>
           <el-form-item label="更新内容">
             <el-input v-model="form.content" type="textarea" />
           </el-form-item>
@@ -65,9 +97,7 @@
       </div>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">{{
-            $t('button.cancel')
-          }}</el-button>
+          <el-button @click="cancel">{{ $t('button.cancel') }}</el-button>
           <el-button type="primary" @click="confirm">{{
             $t('button.confirm')
           }}</el-button>
@@ -78,12 +108,37 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { getGameVersion, addGameVersion } from '../../api/software'
+import { ref, onMounted, watch } from 'vue'
+import { getGameVersion, addGameVersion, getToken } from '../../api/software'
 import Moment from 'moment'
 import HModel from '../../components/HModel/index.vue'
 import router from '../../router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, UploadInstance } from 'element-plus'
+import * as Qiniu from 'qiniu-js'
+import { v4 as uuidv4 } from 'uuid'
+// import md5 from 'md5'
+// const observable = Qiniu.upload(file, key, token, putExtra, config)
+// const uploadUrl = ref<string>('')
+const uploadRef = ref<UploadInstance>()
+const percent = ref<number>(0)
+const file = ref<any>()
+function onChange(e: any) {
+  file.value = e.raw
+  uploadData.value.key = `${String(uuidv4()).replace(
+    /-/g,
+    ''
+  )}_${new Date().getTime()}_${game_id.value}.zip`
+}
+function handleRemove() {
+  percent.value = 0
+}
+function getPercent(response: any, _file: any) {
+  percent.value = response.total.percent
+}
+const uploadData = ref<any>({
+  token: '', // 凭证
+  key: '' // 文件名
+})
 const game_id = ref<any>()
 const game_name = ref<any>()
 const tableData = ref<any>()
@@ -126,18 +181,79 @@ async function query() {
     console.error('Error fetching data: ', error)
   }
 }
+let subscription: any
 // 弹出框确认
 async function confirm() {
-  const res: any = await addGameVersion({
-    game_id: game_id.value,
-    ...form.value
-  })
-  if (res.code === 200) {
-    ElMessage.success('添加成功')
-    dialogVisible.value = false
-    query()
+  if (!form.value.banbenhao) {
+    return ElMessage.error('版本号不能为空')
+  }
+  const result: any = await getToken()
+  if (result.code === 200) {
+    uploadData.value.token = result.data.token
+    const observable = Qiniu.upload(
+      file.value,
+      uploadData.value.key,
+      uploadData.value.token
+    )
+    subscription = observable.subscribe({
+      next: (response: any) => {
+        getPercent(response, file)
+      },
+      error: (error: any) => {
+        console.error('七牛云上传失败', error)
+      },
+      complete: async (e: any) => {
+        form.value.xiazai_url = `http://cdn.huyouyun.cn/${e.key}`
+        const res: any = await addGameVersion({
+          game_id: game_id.value,
+          ...form.value
+        })
+        if (res.code === 200) {
+          ElMessage.success('添加成功')
+          dialogVisible.value = false
+          query()
+        }
+      }
+    })
+  } else {
+    ElMessage.error('获取七牛云上传凭证失败')
   }
 }
+// 弹出框取消
+function cancel() {
+  if (subscription) {
+    subscription.unsubscribe()
+  }
+  dialogVisible.value = false
+  // subscription.unsubscribe()
+}
+// 文件超出限制
+function handleExceed() {
+  ElMessage.warning('最多上传一个文件')
+}
+// async function getUploadToken() {
+//   const res = await getToken()
+//   console.log(res)
+//   // const data = await res.json();
+//   // return res.token;
+// }
+async function beforeUpload(file: any) {
+  const isZip = file.type === 'application/zip'
+  if (!isZip) {
+    ElMessage.error('只能上传zip格式的压缩包文件')
+    return false
+  }
+  // 返回 true 允许上传，false 停止上传
+  return true
+}
+watch(
+  () => dialogVisible.value,
+  () => {
+    form.value = {}
+    percent.value = 0
+    uploadRef.value?.clearFiles()
+  }
+)
 onMounted(() => {
   game_id.value = router.currentRoute.value.query.id
   game_name.value = router.currentRoute.value.query.name

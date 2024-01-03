@@ -184,8 +184,13 @@
         <el-form-item label="游戏天数">
           <el-input v-model="form.days"></el-input>
         </el-form-item>
-        <el-form-item label="分成比例">
-          <el-input v-model="form.divide"></el-input>
+        <el-form-item required label="分成比例">
+          <el-input-number
+            controls-position="right"
+            :min="0"
+            :max="20"
+            v-model="form.divide"
+          ></el-input-number>
         </el-form-item>
         <el-form-item>
           <el-radio-group v-model="form.is_xianxia">
@@ -203,10 +208,16 @@
           <div style="width: 100%">
             <el-button @click="addPackage" type="primary">添加套餐</el-button>
           </div>
-          <div v-for="(item, index) in form.taocan" :key="index">
+          <div v-for="(item, index) in form.taocan" :key="index" class="taocan">
             <div>{{ `套餐${index + 1}` }}</div>
-            <el-input v-model="item.tprice" placeholder="套餐价格"></el-input>
-            <el-input v-model="item.tdays" placeholder="套餐天数"></el-input>
+            <div style="display: flex; align-items: center">
+              <el-input v-model="item.tdays" placeholder="套餐天数"></el-input
+              >天
+            </div>
+            <div>
+              <el-input v-model="item.tprice" placeholder="套餐价格"></el-input
+              >云豆
+            </div>
             <el-button @click="removePackage(index)">删除套餐</el-button>
           </div>
         </el-form-item>
@@ -338,7 +349,7 @@ function editLanguage(row: any) {
     form.value.price = row.price
     form.value.cuxiao_price = row.cuxiao_price
     form.value.days = row.days
-    form.value.divide = row.divide
+    form.value.divide = Number(row.divide)
     form.value.is_xianxia = row.is_xianxia.toString()
     form.value.is_dongjie = row.is_dongjie.toString()
     form.value.taocan = row.taocan
@@ -391,6 +402,8 @@ async function confirm() {
       dialogVisible.value = false
       currentPage.value = 1
       query()
+    } else {
+      ElMessage.error(res.msg)
     }
   } else if (operation.value == '编辑') {
     const res: any = await editSoftware({
@@ -401,6 +414,9 @@ async function confirm() {
       ElMessage.success('编辑成功')
       dialogVisible.value = false
       query()
+      console.log('error', form.value)
+    } else {
+      ElMessage.error(res.msg)
     }
   } else {
     const res: any = await editGameNotice({
@@ -505,6 +521,17 @@ function formatTime(time: number) {
   // padding-bottom: 0;
   .el-input {
     width: 250px;
+  }
+}
+.taocan {
+  width: 200px;
+  margin: 0 10px 10px 0;
+  padding: 10px;
+  border: 1px solid #409eff;
+  border-radius: 15px;
+  .el-input {
+    width: 140px;
+    margin-right: 5px;
   }
 }
 </style>
