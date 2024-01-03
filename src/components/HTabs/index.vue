@@ -125,9 +125,11 @@ function addTab(title: any, route: any) {
     tabs.value.push({ title, route })
     activeTab.value = route // 切换到新增的标签页
     pageCacheStore.addCachedPage(route)
+    // console.log(pageCacheStore)
   } else {
     activeTab.value = route // 切换到已存在的标签页
     pageCacheStore.addCachedPage(route)
+    // console.log(2)
   }
 }
 

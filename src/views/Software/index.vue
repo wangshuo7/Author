@@ -99,6 +99,7 @@
     </HModel>
   </session>
   <el-dialog
+    style="padding: 0 30px"
     v-model="dialogVisible"
     :title="
       operation === '添加'
@@ -107,10 +108,10 @@
         ? $t('button.edit')
         : '编辑公告'
     "
-    width="50%"
+    :width="operation !== '编辑公告' ? '800px' : '500px'"
   >
     <div v-if="operation !== '编辑公告'">
-      <el-form :model="form" label-width="120px">
+      <el-form :model="form" label-width="100px">
         <el-form-item :label="$t('table.title')">
           <el-input v-model="form.title"></el-input>
         </el-form-item>
@@ -126,7 +127,7 @@
         <el-form-item label="游戏平台">
           <el-select
             multiple
-            v-model="form.game_pingtai_id"
+            v-model="pingtai_id"
             placeholder="请选择游戏平台"
             style="width: 500px"
           >
@@ -142,7 +143,7 @@
           <el-select
             filterable
             multiple
-            v-model="form.game_lang_id"
+            v-model="lang_id"
             placeholder="请选择游戏语言"
             style="width: 500px"
           >
@@ -157,7 +158,7 @@
         <el-form-item label="游戏分类">
           <el-select
             multiple
-            v-model="form.game_cate_id"
+            v-model="cate_id"
             placeholder="请选择游戏分类"
             style="width: 500px"
           >
@@ -241,6 +242,13 @@
       </span>
     </template>
   </el-dialog>
+  <Discount
+    :discountVisible="disVisible"
+    :gameId="dis_game_id"
+    :gameName="dis_game_name"
+    @close="closeDisDialog"
+  ></Discount>
+  <Version :versionVisible="verVisible" :gameId="ver_game_id" :gameName="ver_game_name" @close="closeVerDialog"></Version>
 </template>
 
 <script lang="ts">
@@ -262,6 +270,8 @@ import HModel from '../../components/HModel/index.vue'
 import { ElMessage } from 'element-plus'
 import { useGlobalStore } from '../../store/globalStore'
 import router from '../../router'
+import Discount from './discount1.vue'
+import Version from './version1.vue'
 const globalStore = useGlobalStore()
 
 const platforms = ref<any>() // 获取平台
@@ -316,7 +326,7 @@ const form = ref<any>({
   price: '',
   cuxiao_price: '',
   days: '',
-  divide: '',
+  divide: null,
   is_xianxia: '1',
   is_dongjie: '1',
   taocan: []
@@ -357,15 +367,24 @@ function editLanguage(row: any) {
   dialogVisible.value = true
   editId.value = row.game_id
 }
+const verVisible = ref<boolean>(false)
+const ver_game_id = ref<any>()
+const ver_game_name = ref<any>()
 // 添加版本
 function addVersion(row: any) {
-  router.push({
-    name: 'Version',
-    query: {
-      id: row.game_id,
-      name: row.title
-    }
-  })
+  // router.push({
+  //   name: 'Version',
+  //   query: {
+  //     id: row.game_id,
+  //     name: row.title
+  //   }
+  // })
+  ver_game_id.value = row.game_id
+  ver_game_name.value = row.title
+  verVisible.value = true
+}
+function closeVerDialog() {
+  verVisible.value = false
 }
 // 反馈列表
 function goFeedback(row: any) {
@@ -377,21 +396,37 @@ function goFeedback(row: any) {
     }
   })
 }
+
+const disVisible = ref<boolean>(false)
+const dis_game_id = ref<any>()
+const dis_game_name = ref<any>()
 // 游戏折扣
 function goDiscount(row: any) {
-  router.push({
-    name: 'Discount',
-    query: {
-      id: row.game_id,
-      name: row.title
-    }
-  })
+  // router.push({
+  //   name: 'Discount',
+  //   query: {
+  //     id: row.game_id,
+  //     name: row.title
+  //   }
+  // })
+  dis_game_id.value = row.game_id
+  dis_game_name.value = row.title
+  disVisible.value = true
 }
+function closeDisDialog() {
+  disVisible.value = false
+}
+const lang_id = ref<any>()
+const cate_id = ref<any>()
+const pingtai_id = ref<any>()
+
 // 弹出框确定
 async function confirm() {
-  form.value.game_lang_id = form.value?.game_lang_id?.join(',')
-  form.value.game_cate_id = form.value?.game_cate_id?.join(',')
-  form.value.game_pingtai_id = form.value?.game_pingtai_id?.join(',')
+  form.value.game_lang_id = (lang_id.value ? lang_id.value : [])?.join(',')
+  form.value.game_cate_id = (cate_id.value ? cate_id.value : [])?.join(',')
+  form.value.game_pingtai_id = (pingtai_id.value ? pingtai_id.value : [])?.join(
+    ','
+  )
 
   if (operation.value == '添加') {
     const res: any = await addSoftware({
@@ -479,7 +514,7 @@ watch(dialogVisible, () => {
     price: '',
     cuxiao_price: '',
     days: '',
-    divide: '',
+    divide: null,
     is_xianxia: '1',
     is_dongjie: '1',
     taocan: []

@@ -1,12 +1,9 @@
 <template>
-  <div>
-    <div style="margin: 30px">
-      <el-page-header @back="goBack()">
-        <template #content>
-          <span>{{ game_name }}</span>
-        </template>
-      </el-page-header>
-    </div>
+  <el-dialog
+    :title="game_name"
+    v-model="props.discountVisible"
+    @close="closeDiscountDialog"
+  >
     <session>
       <div class="query">
         <el-form :form="queryForm" label-width="80px" @submit.prevent inline>
@@ -127,21 +124,30 @@
         </span>
       </template>
     </el-dialog>
-  </div>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { addDiscount, delDiscount, getDiscountList } from '../../api/software'
 import Moment from 'moment'
 import HModel from '../../components/HModel/index.vue'
-import router from '../../router'
+// import router from '../../router'
 import { ElMessage } from 'element-plus'
 const game_id = ref<any>()
 const game_name = ref<any>()
 const tableData = ref<any>()
 const loading = ref<boolean>(false)
 const dialogVisible = ref<boolean>(false)
+const props = defineProps<{
+  discountVisible: boolean
+  gameId: number | undefined
+  gameName: string | undefined
+}>()
+const emits = defineEmits(['close'])
+function closeDiscountDialog() {
+  emits('close')
+}
 const form = ref<any>({
   type: '1',
   title: '',
@@ -218,15 +224,17 @@ async function query() {
     console.error('Error fetching data: ', error)
   }
 }
-function goBack() {
-  router.replace('/software')
-}
-onMounted(() => {
-  game_id.value = router.currentRoute.value.query.id
-  game_name.value = router.currentRoute.value.query.name
-  query()
-})
-
+watch(
+  () => props.discountVisible,
+  (nVal) => {
+    if (nVal) {
+      game_id.value = props.gameId
+      game_name.value = props.gameName
+      console.log(game_name.value)
+      query()
+    }
+  }
+)
 // 时间格式化
 function formatTime(time: number) {
   return time ? Moment(time * 1000).format('YYYY-MM-DD HH:mm:ss') : '-'
